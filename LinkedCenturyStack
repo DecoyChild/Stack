@@ -1,0 +1,89 @@
+public class LinkCenturyStack<T> implements StackInterface<T>
+{
+    // Linked node fields
+    private DoubleLinkedNode<T> head, tail, curr;
+    private int size;
+
+    //default constructor creates head and tail nodes
+    LinkCenturyStack()
+    {
+        tail = new DoubleLinkedNode(0, null, head);
+        head = new DoubleLinkedNode(0, tail, null);
+        size = 0;
+    }
+
+    //clears the stack
+    @Override
+    public void clear()
+    {
+        head.setNext(tail);
+        head.setPrev(null);
+        size = 0;
+    }
+
+    //will push no matter the size: removing the first element 
+    @Override
+    public boolean push(T data)
+    {
+
+        if (head.getNext() != tail)
+        {
+            //creating a new node
+            DoubleLinkedNode<T> tempNode = new DoubleLinkedNode(data, tail, curr);
+
+            tail.setPrev(tempNode); 
+            curr.setNext(tempNode);
+            curr = tempNode;        
+
+            // removes the oldest element if the stack hits the max
+            if (size == 100)
+            {
+                head = head.getNext();
+            } else
+            {
+                size++;
+            }
+
+        } //edge case for the first ekement pushed
+        else
+        {
+            DoubleLinkedNode<T> tempNode = new DoubleLinkedNode(data, tail, curr);
+            head.setNext(tempNode);
+            curr = tempNode;
+        }
+        return true;
+    }
+
+    //  removes the top element if the size is > 0
+    @Override
+    public void pop()
+    {
+        if (size > 0)
+        {
+            tail.setPrev(curr.getPrev());
+            curr = curr.getPrev();
+            curr.setNext(tail);
+            size--;
+        } else {}
+    }
+
+    // Looks at the top element 
+    @Override
+    public T peek()
+    {
+        if (size > 0)
+        {
+            return curr.getElement();
+        } else
+        {
+            return null;
+        }
+    }
+
+    // returns the size of the stack
+    @Override
+    public int size()
+    {
+        return size;
+    }
+}
